@@ -1,0 +1,16 @@
+#include <iostream>
+#include <fstream>
+#include "Matrix.h"
+
+
+using namespace std;
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	cout << "Добрый день!\n";
+	cout << "Курсовая работа по теме `Оптимальное перемножение матриц`\n";
+	cout << "Работу выполнила Новикова Анастасия, гр.7302\n";
+	
+	Main Program("matrixData.txt");//От винта!
+	
+}
