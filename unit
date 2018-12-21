@@ -1,0 +1,116 @@
+#include "stdafx.h"
+#include "CppUnitTest.h"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include "../kursivaya_alg_3/Matrix.h"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace UnitTest_For_Kursovaya
+{		
+	TEST_CLASS(UnitTest1)
+	{
+	public:
+		
+		TEST_METHOD(size_allmatrix_true)
+		{
+			DataStore Data;
+			Main matrix;
+			Data.LoadData("TestFile.txt");//считали 
+			Assert::IsTrue(Data.AllMatrix.size()==3);
+		}
+		TEST_METHOD(CheckMatrix_true)
+		{
+			DataStore Data;
+			Main matrix1;
+			Data.LoadData("TestFile.txt");//считали 
+			Assert::IsTrue(matrix1.CheckMatrix(Data.AllMatrix));
+		}
+		TEST_METHOD(CheckMatrix_false)
+		{
+			DataStore Data;
+			Main matrix;
+			Data.LoadData("TestFile2.txt");//считали 
+			Assert::IsFalse(matrix.CheckMatrix(Data.AllMatrix));
+		}
+		TEST_METHOD(Mult_true)
+		{
+			DataStore Data;
+			Main matrix;
+			Main Mult;
+			Data.LoadData("TestFile.txt");//считали 
+			int result =matrix.Mult(1, Data.get_Number());
+			Assert::IsTrue(result==21);
+		}
+		TEST_METHOD(Mult_false)
+		{
+			DataStore Data;
+			Main matrix;
+			Main Mult;
+			Data.LoadData("TestFile2.txt");//считали 
+			int result = matrix.Mult(1, Data.get_Number());
+			Assert::IsFalse(result ==0);
+		}
+		TEST_METHOD(get_num_true)
+		{
+			DataStore Data, Get_num;
+			Main matrix;
+		
+			ifstream file;
+			file.open();
+			string line;
+			vector<long long> buffValues;//для считывания
+			int cols;
+			
+			file >> line;//считали имя
+			getline(file, line);
+			getline(file, line);
+
+			cols = Data.Get_num(line, buffValues);
+			Assert::IsTrue(cols == 6);
+		}
+		TEST_METHOD(get_num_false)
+		{
+			DataStore Data, Get_num;
+			Main matrix;
+
+			ifstream file;
+			file.open();
+			string line;
+			vector<long long> buffValues;//для считывания
+			int cols;
+
+			file >> line;//считали имя
+			getline(file, line);
+			getline(file, line);
+
+			cols = Data.Get_num(line, buffValues);
+			Assert::IsFalse(cols == 1);
+		}
+		TEST_METHOD(Print_true)
+		{
+			DataStore Data;
+			Main matrix;
+			Main Print;
+			Data.LoadData("TestFile.txt");//считали 
+			string Answer = matrix.Print(1, Data.get_Number());
+			string OurAnswer = "((A1 x A2) x A3)";
+			Assert::IsTrue(Answer == OurAnswer);
+		}
+		TEST_METHOD(Print_false)
+		{
+			DataStore Data;
+			Main matrix;
+			Main Print;
+			Data.LoadData("TestFile.txt");//считали 
+			string Answer = matrix.Print(1, Data.get_Number());
+			string OurAnswer = "(A1 x (A2 x A3))";
+			Assert::IsFalse(Answer == OurAnswer);
+		}
+
+	};
+}
