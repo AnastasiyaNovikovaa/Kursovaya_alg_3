@@ -10,6 +10,54 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+std::string testFile1 = R"(А1
+1 5
+1 2 3 4 5
+&
+А2
+5 3
+1 2 3
+1 2 3
+1 2 3
+1 2 3
+1 2 3
+&
+А3
+3 2
+1 2
+1 2
+1 2
+&
+end)";
+
+std::string testFile2 = R"(А1
+4 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+&
+А2
+5 3
+1 2 3
+1 2 3
+1 2 3
+1 2 3
+1 2 3
+&
+end)";
+
+std::string testFile3 = R"(А1
+4 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+1 2 3 4 5 6
+&
+end)";
+std::string testFile4 = R"()";
+
+
 namespace UnitTest_For_Kursovaya
 {		
 	TEST_CLASS(UnitTest1)
@@ -18,99 +66,166 @@ namespace UnitTest_For_Kursovaya
 		
 		TEST_METHOD(size_allmatrix_true)
 		{
-			DataStore Data;
-			Main matrix;
-			Data.LoadData("TestFile.txt");//считали 
-			Assert::IsTrue(Data.AllMatrix.size()==3);
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile2)); //считали 
+			Assert::IsTrue(main.Data.AllMatrix.size() == 2);
+		
+		}
+		TEST_METHOD(size_allmatrix_false)
+		{
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile2)); //считали 
+			Assert::IsFalse(main.Data.AllMatrix.size() == 0);
 		}
 		TEST_METHOD(CheckMatrix_true)
 		{
-			DataStore Data;
-			Main matrix1;
-			Data.LoadData("TestFile.txt");//считали 
-			Assert::IsTrue(matrix1.CheckMatrix(Data.AllMatrix));
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile1)); //считали 
+			Assert::IsTrue(main.CheckMatrix(main.Data.AllMatrix));
 		}
 		TEST_METHOD(CheckMatrix_false)
 		{
-			DataStore Data;
-			Main matrix;
-			Data.LoadData("TestFile2.txt");//считали 
-			Assert::IsFalse(matrix.CheckMatrix(Data.AllMatrix));
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile2)); //считали 
+			Assert::IsFalse(main.CheckMatrix(main.Data.AllMatrix));
 		}
+		TEST_METHOD(CheckMatrix_false_onematrix)
+		{
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile3)); //считали 
+			Assert::IsFalse(main.CheckMatrix(main.Data.AllMatrix));
+		}
+		TEST_METHOD(Set_rows_true)
+		{
+			Matrix matrix;
+			matrix.set_Rows(4);
+			Assert::IsTrue(matrix.get_Rows() == 4);
+
+		}
+		TEST_METHOD(Set_col_true)
+		{
+			Matrix matrix;
+			matrix.set_Columns(2);
+			Assert::IsTrue(matrix.get_Columns() == 2);
+
+		}
+		TEST_METHOD(Set_rows_false)
+		{
+			Matrix matrix;
+			matrix.set_Rows(4);
+			Assert::IsFalse(matrix.get_Rows() == 0);
+
+		}
+		TEST_METHOD(Set_col_false)
+		{
+			Matrix matrix;
+			matrix.set_Columns(2);
+			Assert::IsFalse(matrix.get_Columns() == 0);
+		}
+		TEST_METHOD(Set_Name_false)
+		{
+			Matrix matrix;
+			matrix.set_Name("sos");
+			Assert::IsFalse(matrix.get_Name() == "help");
+
+		}
+		TEST_METHOD(Set_Name_true)
+		{
+			Matrix matrix;
+			matrix.set_Name("sos");
+			Assert::IsTrue(matrix.get_Name() == "sos");
+		}
+		TEST_METHOD(Set_Number_true)
+		{
+			int number = 10;
+			DataStore data;
+			data.set_Number(number);
+			Assert::IsTrue(data.get_Number() == 10);
+
+		}
+		TEST_METHOD(Set_Number_false)
+		{
+			int number = 10;
+			DataStore data;
+			data.set_Number(number);
+			Assert::IsFalse(data.get_Number() ==5);
+		}
+
 		TEST_METHOD(Mult_true)
 		{
-			DataStore Data;
-			Main matrix;
-			Main Mult;
-			Data.LoadData("TestFile.txt");//считали 
-			int result =matrix.Mult(1, Data.get_Number());
-			Assert::IsTrue(result==21);
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile1)); //считали 
+			int result = main.Mult(1, main.Data.get_Number());
+			Assert::IsTrue(result == 21);
 		}
 		TEST_METHOD(Mult_false)
 		{
-			DataStore Data;
-			Main matrix;
-			Main Mult;
-			Data.LoadData("TestFile2.txt");//считали 
-			int result = matrix.Mult(1, Data.get_Number());
+		
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile2));//считали 
+			int result = main.Mult(1, main.Data.get_Number());
 			Assert::IsFalse(result ==0);
 		}
-		TEST_METHOD(get_num_true)
+		TEST_METHOD(sizes_vector_allmatrix_true)
 		{
-			DataStore Data, Get_num;
-			Main matrix;
-		
-			ifstream file;
-			file.open();
-			string line;
-			vector<long long> buffValues;//для считывания
-			int cols;
+			Main main;
+			DataStore Data;
+			main.Data.LoadData(std::stringstream(testFile1)); //считали 
 			
-			file >> line;//считали имя
-			getline(file, line);
-			getline(file, line);
+			Assert::IsTrue(main.Data.sizes[0] == 1 && main.Data.sizes[1] == 5 && main.Data.sizes[2] == 3 && main.Data.sizes[3] == 2);
 
-			cols = Data.Get_num(line, buffValues);
-			Assert::IsTrue(cols == 6);
 		}
-		TEST_METHOD(get_num_false)
+		TEST_METHOD(sizes_vector_allmatrix_false)
 		{
-			DataStore Data, Get_num;
-			Main matrix;
-
-			ifstream file;
-			file.open();
-			string line;
-			vector<long long> buffValues;//для считывания
-			int cols;
-
-			file >> line;//считали имя
-			getline(file, line);
-			getline(file, line);
-
-			cols = Data.Get_num(line, buffValues);
-			Assert::IsFalse(cols == 1);
-		}
-		TEST_METHOD(Print_true)
-		{
+			Main main;
 			DataStore Data;
-			Main matrix;
-			Main Print;
-			Data.LoadData("TestFile.txt");//считали 
-			string Answer = matrix.Print(1, Data.get_Number());
-			string OurAnswer = "((A1 x A2) x A3)";
-			Assert::IsTrue(Answer == OurAnswer);
+			main.Data.LoadData(std::stringstream(testFile2)); //считали 
+
+			Assert::IsFalse(main.Data.sizes[0] == 1 && main.Data.sizes[1] == 5);
+
 		}
-		TEST_METHOD(Print_false)
+		TEST_METHOD(number_true)
 		{
-			DataStore Data;
-			Main matrix;
-			Main Print;
-			Data.LoadData("TestFile.txt");//считали 
-			string Answer = matrix.Print(1, Data.get_Number());
-			string OurAnswer = "(A1 x (A2 x A3))";
-			Assert::IsFalse(Answer == OurAnswer);
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile1)); //считали 
+			Assert::IsTrue(main.Data.get_Number() == 3);
+
 		}
+		TEST_METHOD(number_false)
+		{
+			Main main;
+			main.Data.LoadData(std::stringstream(testFile1)); //считали 
+			Assert::IsFalse(main.Data.get_Number() ==9);
+
+		}
+		TEST_METHOD(LoadData_false)
+		{
+			Main main;
+			try
+
+			{
+				main.Data.LoadData(std::stringstream(testFile4)); //считали 
+			}
+
+			catch (const std::out_of_range& error)
+
+			{
+				Assert::AreEqual("file is empty", error.what());
+			}
+		}
+
+		//TEST_METHOD(Print_true)
+		//{
+		//	Main main;
+		//	main.Data.LoadData(std::stringstream(testFile1));//считали 
+
+		//	string Answer = main.Print(1, main.Data.get_Number());
+		//	string OurAnswer("((A1 x A2) x A3)");
+
+		//	Assert::AreEqual(Answer,OurAnswer);
+		//}
+		//
+
 
 	};
 }
